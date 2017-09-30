@@ -95,6 +95,7 @@ namespace Assets.Scripts
                 Instantiate(macrophage, spawnPosition, spawnRotation);
             }
 
+            /* disable spawn of bacterias
             for (int nb = 0; nb < Parameter.NumberOfBacteria; nb++)
             {
                 var x = GaussianRandom(0, Width / 4);
@@ -103,6 +104,7 @@ namespace Assets.Scripts
                 GameObject bact = Instantiate(bacteria, spawnPosition, spawnRotation);
                 bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
             }
+            */
 
             // This triggers the doubling timer for the bacteria
             mStartTime = Time.realtimeSinceStartup;
