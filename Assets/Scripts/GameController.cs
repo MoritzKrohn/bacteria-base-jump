@@ -103,7 +103,7 @@ namespace Assets.Scripts
             }
 
             // disable spawn of bacterias
-            for (int nb = 0; nb < Parameter.NumberOfBacteria; nb++)
+            /*for (int nb = 0; nb < Parameter.NumberOfBacteria; nb++)
             {
                 var x = GaussianRandom(0, Width / 4);
                 var z = GaussianRandom(0, Height / 4);
@@ -111,7 +111,7 @@ namespace Assets.Scripts
                 Debug.Log("x is "+x+" and z is "+z);
                 GameObject bact = Instantiate(bacteria, spawnPosition, spawnRotation);
                 bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
-            }
+            }*/
             
 
             // This triggers the doubling timer for the bacteria

@@ -82,6 +82,7 @@ namespace Assets.Scripts
 	        for (var i = 0; i < n; i++)
 	        {
 	            Bacteria otherBacteria = Bacteria.AllBacteria[i];
+	            if (otherBacteria == null) continue;
 	            if (otherBacteria != this && Vector3.Distance(transform.position, otherBacteria.transform.position) < 1.5f)
 	                numberOfBacteriaInProximity++;
 	        }

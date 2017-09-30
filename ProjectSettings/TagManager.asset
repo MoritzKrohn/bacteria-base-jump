@@ -8,6 +8,7 @@ TagManager:
   - Bacterias
   - Bacteria
   - Cell
+  - Floor
   layers:
   - Default
   - TransparentFX
