@@ -38,8 +38,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e219859ecc2e05418b81b717b573f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bacteria: {fileID: 1799666318382658, guid: eed220d75f3da064b88e0a97d2f21b38, type: 2}
-  macrophage: {fileID: 1339925143090320, guid: 564d3f268b2a7c34f9fcb6849ce4f21d, type: 2}
+  floor: {fileID: 0}
+  bacteria: {fileID: 1870221377961216, guid: f129f9bdfbf59ba42a76c5c77222c029, type: 2}
+  macrophage: {fileID: 1879856162506706, guid: 564d3f268b2a7c34f9fcb6849ce4f21d, type: 2}
   NumberOfBacteria: 20
   NumberOfMacrophages: 2
 --- !u!224 &224898059939681898

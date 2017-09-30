@@ -57,19 +57,21 @@ public class Alveolus : MonoBehaviour
         cellMap = new GameObject[cellHorizontalCount, cellVerticalCount];
 
         //Iterate over each future tile positions for x and y
-        for (int y = 0; y < cellVerticalCount; y++)
+        for (int z = 0; z < cellVerticalCount; z++)
         {
             for (int x = 0; x < cellHorizontalCount; x++)
             {
                 //Instantiate tile prefab at the desired position as a Transform object
-                var offset = y % 2 == 0 ? cellTileWidth / 2 : 0;
-                var xCoord = x * cellTileWidth - gc.Width - offset;
-                var yCoord = y * cellTileHeight - gc.Height;
-                Transform tile = Instantiate(cell.transform, new Vector3(xCoord, yCoord, 0), Quaternion.identity) as Transform;
+                //var offset = z % 2 == 0 ? cellTileWidth / 2 : 0;
+                //var xCoord = x * cellTileWidth - gc.Width - offset;
+                //var zCoord = z * cellTileHeight - gc.Height;
+                var xCoord = x * gc.Width / cellHorizontalCount - gc.Width/2;
+                var zCoord = z * gc.Height / cellVerticalCount - gc.Height/2;
+                Transform tile = Instantiate(cell.transform, new Vector3(xCoord, 0, zCoord), Quaternion.identity, transform) as Transform;
                 //Set the tiles parent to the GameObject this script is attached to
-                tile.parent = transform;
+                //tile.parent = transform;
                 //Set the 2D map array element to the current tile that we just created.
-                cellMap[x, y] = tile.gameObject;
+                cellMap[x, z] = tile.gameObject;
             }
         }        
 
