@@ -80,7 +80,9 @@ namespace Assets.Scripts
             }
             get
             {
-                return Mathf.Round(mChemokine / mParameter.SensitivityToFeelCytokineGradient) * mParameter.SensitivityToFeelCytokineGradient;
+                if (mParameter != null)
+                    return Mathf.Round(mChemokine / mParameter.SensitivityToFeelCytokineGradient) * mParameter.SensitivityToFeelCytokineGradient;
+                return 0;
             }
         }
     }
