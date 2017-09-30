@@ -18,21 +18,24 @@ namespace Assets.Scripts
         {
             _rigidBody = GetComponent<Rigidbody>();
             _origin = transform.position;
+            Time.timeScale = 1.5f;
         }
 
         void FixedUpdate()
         {
             if (_falling)
             {
+                Debug.LogWarning("updated");
                 var mousePosition = Input.mousePosition;
-                var direction = new Vector3(mousePosition.x - Screen.width / 2, 0, mousePosition.y - Screen.height / 2);
+                var direction = new Vector3(mousePosition.x - Screen.width / 2, -50, mousePosition.y - Screen.height / 2);
                 direction /= 30;
                 _rigidBody.AddForce(direction);
+
                 //transform.Rotate(Vector3.up, 5f);
             }
             else if (_returning)
             {
-                float step = 2f;
+                float step = 4f;
                 transform.position = Vector3.MoveTowards(transform.position, _origin, step);
                 if (transform.position == _origin)
                 {
