@@ -111,8 +111,8 @@ namespace Assets.Scripts
                     target = this.gameObject;
                     break;
                 case MovementStates.ChemokineFound:
-                    var cellList = GetObjectsAround<Cell>("Cell", 20F);
-                    Cell cellWithMaxChemokine = cellList.OrderBy(c => c.Chemokine).First();
+                    var cellList = GetObjectsAround<Cell>("Cell", 30F);
+                    Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
                     break;
@@ -157,7 +157,7 @@ namespace Assets.Scripts
             // But only if we don't have a bacteria inside. Need to exterminate them first
             if (MovementState != MovementStates.BaceriaInRange)
             {
-                var cellList = GetObjectsAround<Cell>("Cell", 1.5F);
+                var cellList = GetObjectsAround<Cell>("Cell", 50F);
                 if (cellList.Count > 0 && cellList.Max(c => c.Chemokine) > 0)
                 {
                     MovementState = MovementStates.ChemokineFound;

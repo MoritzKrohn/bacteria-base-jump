@@ -82,7 +82,7 @@ namespace Assets.Scripts
                 {
                     var m = mChemokineEmitter.main;
                     var e = mChemokineEmitter.emission;
-                    m.maxParticles = (int)(input*100);
+                    m.maxParticles = (int)(input*60);
                     e.rateOverTime = (int)(input*50);
                 }
             }
