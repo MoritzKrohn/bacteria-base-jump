@@ -13,15 +13,17 @@ namespace Assets.Scripts
     {
         public Vector3 ScreenSize { get { return new Vector3(Screen.width, Screen.height, 0); } }
 
-		public float Width { get { return Camera.main.ScreenToWorldPoint(ScreenSize).x; } }
-		public float Height { get { return Camera.main.ScreenToWorldPoint(ScreenSize).y; } }
+		public float Width { get { return floor.GetComponent<Collider>().bounds.size.x; } }
+		public float Height { get { return floor.GetComponent<Collider>().bounds.size.z; } }
 
         public int MacrophageCount { get { return FindObjectsOfType(typeof(Macrophage)).Length; } }
         public int BacteriaCount { get { return FindObjectsOfType(typeof(Bacteria)).Length; } }
         public Bacteria[] Bacterias { get { return FindObjectsOfType(typeof(Bacteria)) as Bacteria[]; } }
 
+        public GameObject floor;
         public GameObject bacteria;
         public GameObject macrophage;
+
         public ModelParameter Parameter = new ModelParameter() { BacteriaDoublingTime = 20, NumberOfBacteria = 100 };
 
         public int NumberOfBacteria;
@@ -49,7 +51,7 @@ namespace Assets.Scripts
                 //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
                 Destroy(gameObject);
             }
-
+            
             //Sets this to not be destroyed when reloading scene
             DontDestroyOnLoad(gameObject);
 
@@ -91,20 +93,21 @@ namespace Assets.Scripts
 
             for (int i = 0; i < Parameter.NumberOfMacrophages; i++)
             {
-                spawnPosition = new Vector3(Random.Range(0, Width), Random.Range(0, Height), 0);
+                spawnPosition = new Vector3(Random.Range(0, Width), 10, Random.Range(0, Height));
                 Instantiate(macrophage, spawnPosition, spawnRotation);
             }
 
-            /* disable spawn of bacterias
+            // disable spawn of bacterias
             for (int nb = 0; nb < Parameter.NumberOfBacteria; nb++)
             {
                 var x = GaussianRandom(0, Width / 4);
-                var y = GaussianRandom(0, Height / 4);
-                spawnPosition = new Vector3(x, y, 0);
+                var z = GaussianRandom(0, Height / 4);
+                spawnPosition = new Vector3(x, 0, z);
+                Debug.Log("x is "+x+" and z is "+z);
                 GameObject bact = Instantiate(bacteria, spawnPosition, spawnRotation);
                 bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
             }
-            */
+            
 
             // This triggers the doubling timer for the bacteria
             mStartTime = Time.realtimeSinceStartup;
@@ -171,7 +174,7 @@ namespace Assets.Scripts
 				for (int i = 0; i < bactList.Length; i++)
 				{
 					var b = bactList[i];
-					Vector3 spawnPosition = new Vector3(b.transform.position.x, b.transform.position.y);
+					Vector3 spawnPosition = new Vector3(b.transform.position.x, 0 ,b.transform.position.z);
 					Quaternion spawnRotation = Quaternion.identity;
                     var bact = Instantiate(bacteria, spawnPosition, spawnRotation);
                     bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;

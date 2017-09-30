@@ -9,6 +9,8 @@ namespace Assets.Scripts
 		private MovementStates mMovementState = MovementStates.SessileState;
         private ModelParameter mParameter;
 
+	    private Vector3 floorSize;
+
         // Individual bacteria are between 0.5 and 1.25 micrometers in diameter. From: https://microbewiki.kenyon.edu/index.php/Streptococcus_pneumoniae
         // So we take 1 roughly as guideline
 
@@ -44,6 +46,7 @@ namespace Assets.Scripts
         public void Start()
         {
             GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
+            floorSize = gc.floor.GetComponent<Collider>().bounds.size;
             mParameter = gc.Parameter;
 
             StartCoroutine(NewHeadingCoroutine());
@@ -88,22 +91,21 @@ namespace Assets.Scripts
 			InterchangePhase();			
             
 			var x = (float)(Mathf.Cos(mCurrentAngle) * StepSize);
-			var y = (float)(Mathf.Sin(mCurrentAngle) * StepSize); // Step into the direction defined
+			var z = (float)(Mathf.Sin(mCurrentAngle) * StepSize); // Step into the direction defined
 
             PlayerMovementClamping();
 
             // Apply and smooth out movement
-            Vector3 movement = new Vector3(x, y, 0);
+            Vector3 movement = new Vector3(x, 0, z);
             movement *= Time.deltaTime;
 			transform.Translate(movement);
         }
 
         void PlayerMovementClamping()
         {
-            var viewpointCoord = Camera.main.WorldToViewportPoint(transform.position);
-            viewpointCoord.x = Mathf.Clamp01(viewpointCoord.x);
-            viewpointCoord.y = Mathf.Clamp01(viewpointCoord.y);
-            transform.position = Camera.main.ViewportToWorldPoint(viewpointCoord);
+            float x = Mathf.Clamp(transform.position.x,-floorSize.x/2,floorSize.x);
+            float z = Mathf.Clamp(transform.position.z,-floorSize.z/2,floorSize.z);
+            transform.position = new Vector3(x,0,z);
         }
 
     }

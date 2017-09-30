@@ -9,14 +9,14 @@ namespace Assets.Scripts
 	{
         // Model parameter
         ModelParameter mParameter;
-        private Rigidbody2D mRigidBody;
+        private Rigidbody mRigidBody;
         // Eaten bacteria
         private int mBacteriaEaten = 0;
 
         public float X { get { return transform.position.x; } }
-        public float Y { get { return transform.position.y; } }
+        public float Z { get { return transform.position.z; } }
 		// Biological parameters for macrophages		
-        private Vector2 mDirection = Vector2.one;
+        private Vector3 mDirection = Vector3.one;
         private GameObject target;
         public Vector2 velocity;
 
@@ -55,7 +55,9 @@ namespace Assets.Scripts
         // Internal state. Don't touch
         private int mBacteriaNear = 0;
 
-        /// <summary>
+	    private Vector3 floorSize;
+
+	    /// <summary>
         /// Number of bacteria in range
         /// </summary>
         private int BacteriaNear
@@ -82,7 +84,8 @@ namespace Assets.Scripts
         {
             GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
             mParameter = gc.Parameter;
-            mRigidBody = GetComponent<Rigidbody2D>();
+            floorSize = gc.floor.GetComponent<Collider>().bounds.size;
+            mRigidBody = GetComponent<Rigidbody>();
             if (!mRigidBody)
             {
                 Debug.LogError("No rigidBody attached!");
@@ -98,11 +101,11 @@ namespace Assets.Scripts
             switch (movementState)
             {
                 case MovementStates.Idle:
-                    mDirection = new Vector2(Random.Range(-1F, 1F), Random.Range(-1F, 1F)); // Random direction
+                    mDirection = new Vector3(Random.Range(-1F, 1F),0, Random.Range(-1F, 1F)); // Random direction
                     target = this.gameObject;
                     break;
                 case MovementStates.ChemokineFound:
-                    var cellList = GetObjectsAround<Cell>("Cell", 1.5F);
+                    var cellList = GetObjectsAround<Cell>("Cell", 20F);
                     Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
@@ -110,7 +113,7 @@ namespace Assets.Scripts
                 case MovementStates.BaceriaInRange:
                     var bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
                     Bacteria nearestBact = bactList
-                        .OrderByDescending(b => Vector2.Distance(transform.position, b.transform.position))
+                        .OrderByDescending(b => Vector3.Distance(transform.position, b.transform.position))
                         .First()
                         .GetComponent<Bacteria>();
                     target = nearestBact.gameObject;
@@ -139,8 +142,8 @@ namespace Assets.Scripts
         {
             PlayerMovementClamping();
             var speed = mParameter.MacrophageMovement * 1;
-            Debug.DrawLine(transform.position, target.transform.position, Color.black);
-            Vector2 myPosition = transform.position; // trick to convert a Vector3 to Vector2
+            Debug.DrawLine(transform.position, target.transform.position, Color.black,2);
+            Vector3 myPosition = transform.position; // trick to convert a Vector3 to Vector2
             mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
             // If our spider senses are tingeling and we smell chemokine we switch to search mode.
             // But only if we don't have a bacteria inside. Need to exterminate them first
@@ -175,10 +178,14 @@ namespace Assets.Scripts
 
         void PlayerMovementClamping()
         {
-            var viewpointCoord = Camera.main.WorldToViewportPoint(transform.position);
+            /*var viewpointCoord = Camera.main.WorldToViewportPoint(transform.position);
             viewpointCoord.x = Mathf.Clamp01(viewpointCoord.x);
             viewpointCoord.y = Mathf.Clamp01(viewpointCoord.y);
-            transform.position = Camera.main.ViewportToWorldPoint(viewpointCoord);
+            transform.position = Camera.main.ViewportToWorldPoint(viewpointCoord);*/
+
+            float x = Mathf.Clamp(transform.position.x, -floorSize.x / 2, floorSize.x);
+            float z = Mathf.Clamp(transform.position.z, -floorSize.z / 2, floorSize.z);
+            transform.position = new Vector3(x, 0, z);
         }
 
 
@@ -187,7 +194,7 @@ namespace Assets.Scripts
         /// Handles the entry collision with this object
         /// </summary>
         /// <param name="e">other object</param>
-        private void OnTriggerEnter2D(Collider2D e)
+        private void OnTriggerEnter(Collider e)
         {
             if(e.gameObject.name.Contains("Bacteria"))
             {
@@ -199,7 +206,7 @@ namespace Assets.Scripts
         /// Checks permanently for any objects inside the hit area
         /// </summary>
         /// <param name="e">other object</param>
-        private void OnTriggerStay2D(Collider2D e)
+        private void OnTriggerStay(Collider e)
         {
             if (e.gameObject.name.Contains("Bacteria"))
             {
@@ -216,7 +223,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void OnTriggerExit2D(Collider2D e)
+        private void OnTriggerExit(Collider e)
         {
             if (e.gameObject.name.Contains("Bacteria"))
             {
