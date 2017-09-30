@@ -163,12 +163,4 @@ namespace Assets.Scripts
     }
 }
 
-	    public HashSet<Cell> CloseToCells = new HashSet<Cell>();
-        private MovementStates mMovementState = MovementStates.SessileState;
-	    public event DeathEvent OnDead; 
-	    public delegate void DeathEvent();
-
-	    public static event LandedEvent OnLanded;
-        public delegate void LandedEvent();
-
-	    public static List<Bacteria> AllBacteria = new List<Bacteria>();
+	    
