@@ -7,6 +7,7 @@ namespace Assets.Scripts
 {
 	public class Macrophage : MonoBehaviour
 	{
+	    public bool DoDebug = false;
         // Model parameter
         ModelParameter mParameter;
         private Rigidbody2D mRigidBody;
