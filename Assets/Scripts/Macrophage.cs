@@ -7,12 +7,13 @@ namespace Assets.Scripts
 {
 	public class Macrophage : MonoBehaviour
 	{
-	    public bool DoDebug = false;
         // Model parameter
         ModelParameter mParameter;
         private Rigidbody2D mRigidBody;
         // Eaten bacteria
         private int mBacteriaEaten = 0;
+
+	    private int _damage = 10;
 
         public float X { get { return transform.position.x; } }
         public float Y { get { return transform.position.y; } }
@@ -20,6 +21,8 @@ namespace Assets.Scripts
         private Vector2 mDirection = Vector2.one;
         private GameObject target;
         public Vector2 velocity;
+
+	    private Bacteria _bacteriaBeingEaten = null;
 
         /// <summary>
         /// Movement states the macrophage can be in
@@ -104,7 +107,13 @@ namespace Assets.Scripts
                     break;
                 case MovementStates.ChemokineFound:
                     var cellList = GetObjectsAround<Cell>("Cell", 1.5F);
-                    Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
+
+                    List<Cell> chemokineCells = cellList.OrderByDescending(c => c.Chemokine).ToList();
+                    int n = chemokineCells.Count;
+                    int topGroupCount = Mathf.RoundToInt(n / 4f);
+                    int randomIndex = Mathf.RoundToInt(Random.Range(-0.49f, n - 0.51f));
+                    Cell cellWithMaxChemokine = chemokineCells[randomIndex];
+
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
                     break;
@@ -119,10 +128,6 @@ namespace Assets.Scripts
                         target = nearestBact.gameObject;
                         mDirection = (target.transform.position - transform.position).normalized;
                     }
-                    /*Bacteria nearestBact = bactList
-                        .OrderBy(b => Vector2.Distance(transform.position, b.transform.position))
-                        .FirstOrDefault()
-                        .GetComponent<Bacteria>();*/
                     break;
                 default:
                     Debug.LogError("Macrophage state not implemented!");
@@ -147,7 +152,7 @@ namespace Assets.Scripts
         {
             PlayerMovementClamping();
             var speed = mParameter.MacrophageMovement * 1;
-            if (target)
+            if (target != null)
                 Debug.DrawLine(transform.position, target.transform.position, Color.black);
             Vector2 myPosition = transform.position; // trick to convert a Vector3 to Vector2
             mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
@@ -216,14 +221,36 @@ namespace Assets.Scripts
                 var macBounds = 0.7F;
                 if (distToBact < macBounds)
                 {
-                    BacteriaNear--;
-                    Destroy(e.gameObject);
-                    mBacteriaEaten++;
-                    Debug.Log("Bacteria exterminated");
-                    return;
+                    if (_bacteriaBeingEaten != null) return;
+
+                    BeginEatingBacterium(e.GetComponent<Bacteria>());
                 }
             }
         }
+
+	    private void BeginEatingBacterium(Bacteria bacterium)
+	    {
+	        _bacteriaBeingEaten = bacterium;
+	        _bacteriaBeingEaten.OnDead += HandleBacteriumEaten;
+	        StartCoroutine(EatBacterium());
+	    }
+
+	    private void HandleBacteriumEaten()
+	    {
+	        _bacteriaBeingEaten.OnDead -= HandleBacteriumEaten;
+	        _bacteriaBeingEaten = null;
+	        BacteriaNear--;
+	        mBacteriaEaten++;
+        }
+
+	    private IEnumerator EatBacterium()
+	    {
+	        while (_bacteriaBeingEaten != null && _bacteriaBeingEaten.HealthPoints > 0)
+	        {
+	            _bacteriaBeingEaten.ReduceHealth(_damage);
+	            yield return new WaitForSeconds(0.25f);
+	        }
+	    }
 
         private void OnTriggerExit2D(Collider2D e)
         {
