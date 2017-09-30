@@ -49,11 +49,17 @@ namespace Assets.Scripts
         private MovementStates MovementState
         {
             get { return movementState; }
-            set { if (value != movementState) { lastMovementState = movementState; movementState = value; } }
+            set
+            {
+                if (value != movementState)
+                {
+                    lastMovementState = movementState; movementState = value;
+                }
+            }
         }
 
         // Internal state. Don't touch
-        private int mBacteriaNear = 0;
+        public int mBacteriaNear = 0;
 
 	    private Vector3 floorSize;
 
@@ -158,7 +164,8 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    MovementState = lastMovementState;
+                    if(lastMovementState != MovementStates.BaceriaInRange)
+                        MovementState = lastMovementState;
                 }
             }
         }
@@ -220,7 +227,6 @@ namespace Assets.Scripts
                     Debug.Log(e.gameObject.GetComponent<Bacteria>().CloseToCells.Count);
                     foreach (Cell cell in e.gameObject.GetComponent<Bacteria>().CloseToCells)
                     {
-                        Debug.Log("Removed 1");
                         cell.RemoveBacteria();
                     }
 
