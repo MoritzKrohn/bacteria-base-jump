@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbf6b7364013bd048ad582033001784b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cell: {fileID: 1258150719655416, guid: 835222c98930dbd4195c7724987b0e5a, type: 2}
+  cell: {fileID: 1258150719655416, guid: b852cd52281055b4b87e965531db03b8, type: 2}
   cellTileWidth: 1.5
   cellTileHeight: 1.11
   cellHorizontalCount: 13
