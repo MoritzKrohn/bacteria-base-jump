@@ -13,7 +13,7 @@ namespace Assets.Scripts
         // Eaten bacteria
         private int mBacteriaEaten = 0;
 
-	    private int _damage = 10;
+	    private int _damage { get { return mParameter.MacrophageDamage; } }
 
         public float X { get { return transform.position.x; } }
         public float Y { get { return transform.position.y; } }
