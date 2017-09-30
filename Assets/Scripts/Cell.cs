@@ -78,17 +78,21 @@ namespace Assets.Scripts
                 //var input = Mathf.Clamp01(value * 1e4F);
                 var input = Mathf.InverseLerp(1e-6F, 1e-3F, value);
                 ChemokineLevels = input*100;
+                
                 if (mChemokineEmitter)
                 {
                     var m = mChemokineEmitter.main;
                     var e = mChemokineEmitter.emission;
+                    var rateOverTime = (int) (input * 50);
+                    e.rateOverTime = rateOverTime < 3 ? 0 : rateOverTime;
                     m.maxParticles = (int)(input*20);
-                    e.rateOverTime = (int)(input*50);
                 }
             }
             get
             {
-                return Mathf.Round(mChemokine / mParameter.SensitivityToFeelCytokineGradient) * mParameter.SensitivityToFeelCytokineGradient;
+                if (mParameter != null)
+                    return Mathf.Round(mChemokine / mParameter.SensitivityToFeelCytokineGradient) * mParameter.SensitivityToFeelCytokineGradient;
+                return 0;
             }
         }
     }

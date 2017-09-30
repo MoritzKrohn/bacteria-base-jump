@@ -13,12 +13,16 @@ namespace Assets.Scripts
         // Eaten bacteria
         private int mBacteriaEaten = 0;
 
+	    private int _damage { get { return mParameter.MacrophageDamage; } }
+
         public float X { get { return transform.position.x; } }
         public float Z { get { return transform.position.z; } }
 		// Biological parameters for macrophages		
         private Vector3 mDirection = Vector3.one;
         private GameObject target;
         public Vector2 velocity;
+
+	    private Bacteria _bacteriaBeingEaten = null;
 
         /// <summary>
         /// Movement states the macrophage can be in
@@ -111,19 +115,30 @@ namespace Assets.Scripts
                     target = this.gameObject;
                     break;
                 case MovementStates.ChemokineFound:
+
                     var cellList = GetObjectsAround<Cell>("Cell", 30F);
-                    Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
+
+                    List<Cell> chemokineCells = cellList.OrderByDescending(c => c.Chemokine).ToList();
+                    int n = chemokineCells.Count;
+                    int topGroupCount = Mathf.RoundToInt(n / 4f);
+                    int randomIndex = Mathf.RoundToInt(Random.Range(-0.49f, n - 0.51f));
+                    Cell cellWithMaxChemokine = chemokineCells[randomIndex];
+
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
                     break;
                 case MovementStates.BaceriaInRange:
                     var bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
-                    Bacteria nearestBact = bactList
-                        .OrderBy(b => Vector3.Distance(transform.position, b.transform.position))
-                        .First()
-                        .GetComponent<Bacteria>();
-                    target = nearestBact.gameObject;
-                    mDirection = (target.transform.position - transform.position).normalized;
+
+                    var nearestBactObj = bactList
+                         .OrderBy(b => Vector3.Distance(transform.position, b.transform.position))
+                        .FirstOrDefault();
+                    if (nearestBactObj != null)
+                    {
+                        Bacteria nearestBact = nearestBactObj.GetComponent<Bacteria>();
+                        target = nearestBact.gameObject;
+                        mDirection = (target.transform.position - transform.position).normalized;
+                    }
                     break;
                 default:
                     Debug.LogError("Macrophage state not implemented!");
@@ -148,10 +163,12 @@ namespace Assets.Scripts
         {
             PlayerMovementClamping();
             var speed = mParameter.MacrophageMovement * 1;
+
             if(target != null)
                 Debug.DrawLine(transform.position, target.transform.position, Color.blue);
 
             Vector3 myPosition = transform.position; // trick to convert a Vector3 to Vector2
+
             mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
             // If our spider senses are tingeling and we smell chemokine we switch to search mode.
             // But only if we don't have a bacteria inside. Need to exterminate them first
@@ -223,22 +240,46 @@ namespace Assets.Scripts
                 var macBounds = 1F;
                 if (distToBact < macBounds)
                 {
-                    Debug.Log("Bacteria exterminated");
-                    Debug.Log(e.gameObject.GetComponent<Bacteria>().CloseToCells.Count);
-                    foreach (Cell cell in e.gameObject.GetComponent<Bacteria>().CloseToCells)
-                    {
-                        cell.RemoveBacteria();
-                    }
 
-                    BacteriaNear--;
+                    if (_bacteriaBeingEaten != null) return;
 
-                    Destroy(e.gameObject);
-                    mBacteriaEaten++;
-                    
-                    return;
+                    BeginEatingBacterium(e.GetComponent<Bacteria>());
+
                 }
             }
         }
+
+
+	    private void BeginEatingBacterium(Bacteria bacterium)
+	    {
+	        _bacteriaBeingEaten = bacterium;
+	        _bacteriaBeingEaten.OnDead += HandleBacteriumEaten;
+	        StartCoroutine(EatBacterium());
+	    }
+
+	    private void HandleBacteriumEaten()
+	    {
+            foreach (Cell cell in _bacteriaBeingEaten.GetComponent<Bacteria>().CloseToCells)
+            {
+                cell.RemoveBacteria();
+            }
+
+	        _bacteriaBeingEaten.OnDead -= HandleBacteriumEaten;
+	        _bacteriaBeingEaten = null;
+	        BacteriaNear--;
+	        mBacteriaEaten++;
+
+            
+        }
+
+	    private IEnumerator EatBacterium()
+	    {
+	        while (_bacteriaBeingEaten != null && _bacteriaBeingEaten.HealthPoints > 0)
+	        {
+	            _bacteriaBeingEaten.ReduceHealth(_damage);
+	            yield return new WaitForSeconds(0.25f);
+	        }
+	    }
 
         private void OnTriggerExit(Collider e)
         {

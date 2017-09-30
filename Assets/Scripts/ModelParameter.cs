@@ -24,9 +24,9 @@ namespace Assets.Scripts
 	{
 		public int NumberOfBacteria = 1;
 		public int NumberOfMacrophages = 3;
-		public int ChemokineDiffusionConstant = 6000;
+		public int ChemokineDiffusionConstant = 2000;//6000
 		public int AntigenPerBacteria = 1;
-		public float MovementInSessilePhase = 0.1f;
+		public float MovementInSessilePhase = 0f;
 		public float MovementInFlowingPhase = 3f;
 		public double RadialFlow = 4.2e-2;
 		public float BacteriaDoublingTime = 200F; // every 3.32 hours
@@ -42,7 +42,9 @@ namespace Assets.Scripts
         public int EpithelialCellWidth = 30;
         public float SychronisationTime = 5; // Interval of time between synchronization of models in minutes aka integration step time
         public int CellDimension { get { return (EpithelialCellWidth * EpithelialCellsPerRow) / 2; } }
-	
+	    public int BacteriaDefaultHealth = 100;
+	    public int MacrophageDamage = 10;
+
 	}
 }
 

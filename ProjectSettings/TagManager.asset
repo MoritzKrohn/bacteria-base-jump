@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Bacterias
   - Alveolus
+  - Bacterias
   - Bacteria
   - Cell
   layers:
@@ -17,8 +17,8 @@ TagManager:
   - UI
   - 
   - 
-  - Cells
-  - Background
+  - 
+  - 
   - 
   - 
   - 
@@ -44,13 +44,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Cells
-    uniqueID: 4062990733
-    locked: 0
-  - name: Background
-    uniqueID: 3391341687
-    locked: 0
-  - name: Bacteria
-    uniqueID: 4157935353
     locked: 0

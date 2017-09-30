@@ -11,6 +11,11 @@ namespace Assets.Scripts
     /// </summary>
     public class GameController : MonoBehaviour
     {
+        public static void CreateBacteriaAtPoint(float x, float y)
+        {
+            instance.CreateBacterium(x, y);
+        }
+
         public Vector3 ScreenSize { get { return new Vector3(Screen.width, Screen.height, 0); } }
 
 		public float Width { get { return floor.GetComponent<Collider>().bounds.size.x; } }
@@ -112,6 +117,12 @@ namespace Assets.Scripts
             // This triggers the doubling timer for the bacteria
             mStartTime = Time.realtimeSinceStartup;
             //StartCoroutine(DoubleBacteria());
+        }
+
+        void CreateBacterium(float posX, float posY)
+        {
+            GameObject bact = Instantiate(bacteria, new Vector3(posX, posY, 0), Quaternion.identity);
+            bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
         }
 
         void Update()
