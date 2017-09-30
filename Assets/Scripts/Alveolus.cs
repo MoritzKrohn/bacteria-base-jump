@@ -94,7 +94,9 @@ public class Alveolus : MonoBehaviour
                 for (int col = 0; col < mParameter.EpithelialCellsPerColumn; col++)
                 {
                     GameObject go = cellMap[row, col];
-                    go.GetComponent<Cell>().Chemokine = (float)m[row, col];
+                    var chemokine = (float) m[row, col];
+                    //go.GetComponent<Cell>().Chemokine = (float)m[row, col];
+                    go.GetComponent<Cell>().Chemokine = chemokine * chemokine * 10000; // Dirty hack to exponentially decrease chemokine once bacteria is dead
                 }
             }
             //Debug.Log(m);
