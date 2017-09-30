@@ -118,11 +118,13 @@ namespace Assets.Scripts
 
                     var cellList = GetObjectsAround<Cell>("Cell", 30F);
 
-                    List<Cell> chemokineCells = cellList.OrderByDescending(c => c.Chemokine).ToList();
+
+                    /*List<Cell> chemokineCells = cellList.OrderByDescending(c => c.Chemokine).ToList();
                     int n = chemokineCells.Count;
                     int topGroupCount = Mathf.RoundToInt(n / 4f);
                     int randomIndex = Mathf.RoundToInt(Random.Range(-0.49f, topGroupCount - 0.51f));
-                    Cell cellWithMaxChemokine = chemokineCells[randomIndex];
+                    Cell cellWithMaxChemokine = chemokineCells[randomIndex];*/
+                    Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
 
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
