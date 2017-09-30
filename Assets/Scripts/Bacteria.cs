@@ -1,12 +1,15 @@
 ﻿//using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
 	public class Bacteria : MonoBehaviour
 	{
-		private MovementStates mMovementState = MovementStates.SessileState;
+	    public HashSet<Cell> CloseToCells = new HashSet<Cell>();
+
+        private MovementStates mMovementState = MovementStates.SessileState;
         private ModelParameter mParameter;
 
 	    private Vector3 floorSize;
@@ -103,8 +106,8 @@ namespace Assets.Scripts
 
         void PlayerMovementClamping()
         {
-            float x = Mathf.Clamp(transform.position.x,-floorSize.x/2,floorSize.x);
-            float z = Mathf.Clamp(transform.position.z,-floorSize.z/2,floorSize.z);
+            float x = Mathf.Clamp(transform.position.x,-floorSize.x/2,floorSize.x/2);
+            float z = Mathf.Clamp(transform.position.z,-floorSize.z/2,floorSize.z/2);
             transform.position = new Vector3(x,0,z);
         }
 

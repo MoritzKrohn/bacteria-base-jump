@@ -93,7 +93,7 @@ namespace Assets.Scripts
 
             for (int i = 0; i < Parameter.NumberOfMacrophages; i++)
             {
-                spawnPosition = new Vector3(Random.Range(0, Width), 10, Random.Range(0, Height));
+                spawnPosition = new Vector3(Random.Range(-Width/4, Width/4), 10, Random.Range(-Height/4, Height/4));
                 Instantiate(macrophage, spawnPosition, spawnRotation);
             }
 
@@ -111,7 +111,7 @@ namespace Assets.Scripts
 
             // This triggers the doubling timer for the bacteria
             mStartTime = Time.realtimeSinceStartup;
-            StartCoroutine(DoubleBacteria());
+            //StartCoroutine(DoubleBacteria());
         }
 
         void Update()

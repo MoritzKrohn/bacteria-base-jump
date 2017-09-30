@@ -27,11 +27,12 @@ namespace Assets.Scripts
             mParameter = mGameController.Parameter;
         }
 
-        private void OnTriggerEnter2D(Collider2D e)
-        { 
+        private void OnTriggerEnter(Collider e)
+        {
             if (e.gameObject.name.Contains("Bacteria"))
             {
                 BacteriaOnCell++;
+                e.gameObject.GetComponent<Bacteria>().CloseToCells.Add(this);
             }
             else if (e.gameObject.name.Contains("Macrophage"))
             {
@@ -42,11 +43,12 @@ namespace Assets.Scripts
                 }
             }
         }
-        private void OnTriggerExit2D(Collider2D e)
+        private void OnTriggerExit(Collider e)
         {
             if (e.gameObject.name.Contains("Bacteria"))
             {
                 BacteriaOnCell--;
+                e.gameObject.GetComponent<Bacteria>().CloseToCells.Remove(this);
             }
             else if (e.gameObject.name.Contains("Macrophage"))
             {
@@ -56,6 +58,12 @@ namespace Assets.Scripts
                     MacrophageOnCell.Remove(mac);
                 }
             }
+        }
+
+        public void RemoveBacteria()
+        {
+            if (BacteriaOnCell - 1 >= 0)
+                BacteriaOnCell--;
         }
 
         public void Update()

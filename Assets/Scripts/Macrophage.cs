@@ -106,14 +106,14 @@ namespace Assets.Scripts
                     break;
                 case MovementStates.ChemokineFound:
                     var cellList = GetObjectsAround<Cell>("Cell", 20F);
-                    Cell cellWithMaxChemokine = cellList.OrderByDescending(c => c.Chemokine).First();
+                    Cell cellWithMaxChemokine = cellList.OrderBy(c => c.Chemokine).First();
                     target = cellWithMaxChemokine.gameObject;
                     mDirection = (target.transform.position - transform.position).normalized;
                     break;
                 case MovementStates.BaceriaInRange:
                     var bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
                     Bacteria nearestBact = bactList
-                        .OrderByDescending(b => Vector3.Distance(transform.position, b.transform.position))
+                        .OrderBy(b => Vector3.Distance(transform.position, b.transform.position))
                         .First()
                         .GetComponent<Bacteria>();
                     target = nearestBact.gameObject;
@@ -142,7 +142,9 @@ namespace Assets.Scripts
         {
             PlayerMovementClamping();
             var speed = mParameter.MacrophageMovement * 1;
-            Debug.DrawLine(transform.position, target.transform.position, Color.black,2);
+            if(target != null)
+                Debug.DrawLine(transform.position, target.transform.position, Color.blue);
+
             Vector3 myPosition = transform.position; // trick to convert a Vector3 to Vector2
             mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
             // If our spider senses are tingeling and we smell chemokine we switch to search mode.
@@ -183,8 +185,8 @@ namespace Assets.Scripts
             viewpointCoord.y = Mathf.Clamp01(viewpointCoord.y);
             transform.position = Camera.main.ViewportToWorldPoint(viewpointCoord);*/
 
-            float x = Mathf.Clamp(transform.position.x, -floorSize.x / 2, floorSize.x);
-            float z = Mathf.Clamp(transform.position.z, -floorSize.z / 2, floorSize.z);
+            float x = Mathf.Clamp(transform.position.x, -floorSize.x / 2, floorSize.x/2);
+            float z = Mathf.Clamp(transform.position.z, -floorSize.z / 2, floorSize.z/2);
             transform.position = new Vector3(x, 0, z);
         }
 
@@ -210,14 +212,23 @@ namespace Assets.Scripts
         {
             if (e.gameObject.name.Contains("Bacteria"))
             {
-                var distToBact = Vector2.Distance(transform.position, e.transform.position);
-                var macBounds = 0.7F;
+                var distToBact = Vector3.Distance(transform.position, e.transform.position);
+                var macBounds = 1F;
                 if (distToBact < macBounds)
                 {
+                    Debug.Log("Bacteria exterminated");
+                    Debug.Log(e.gameObject.GetComponent<Bacteria>().CloseToCells.Count);
+                    foreach (Cell cell in e.gameObject.GetComponent<Bacteria>().CloseToCells)
+                    {
+                        Debug.Log("Removed 1");
+                        cell.RemoveBacteria();
+                    }
+
                     BacteriaNear--;
+
                     Destroy(e.gameObject);
                     mBacteriaEaten++;
-                    Debug.Log("Bacteria exterminated");
+                    
                     return;
                 }
             }
