@@ -1,12 +1,21 @@
 ﻿//using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
 	public class Bacteria : MonoBehaviour
 	{
-		private MovementStates mMovementState = MovementStates.SessileState;
+	    public static List<Bacteria> AllBacteria = new List<Bacteria>();
+
+        public delegate void LandedEvent();
+	    public static event LandedEvent OnLanded;
+
+	    public delegate void DeathEvent();
+	    public event DeathEvent OnDead; 
+
+        private MovementStates mMovementState = MovementStates.SessileState;
         private ModelParameter mParameter;
 
         // Individual bacteria are between 0.5 and 1.25 micrometers in diameter. From: https://microbewiki.kenyon.edu/index.php/Streptococcus_pneumoniae
@@ -16,6 +25,15 @@ namespace Assets.Scripts
 
         public float X { get { return transform.position.x; } }
         public float Y { get { return transform.position.y; } }
+
+	    private float _healthMultiplier = 1f;
+	    private int _damageReceived = 0;
+
+	    private int _healthPoints
+	    {
+	        get { return Mathf.RoundToInt(mParameter.BacteriaDefaultHealth * _healthMultiplier) - _damageReceived; }
+	    }
+        public int HealthPoints { get { return _healthPoints;  } }
 
         public float StepSize
 		{
@@ -45,11 +63,43 @@ namespace Assets.Scripts
         {
             GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
             mParameter = gc.Parameter;
-
             mMovementState = MovementStates.SessileState;
+            Bacteria.AllBacteria.Add(this);
+            Bacteria.OnLanded += RecalculateHealthMultiplier;
+            if (Bacteria.OnLanded != null)
+                Bacteria.OnLanded.Invoke();
 
             StartCoroutine(NewHeadingCoroutine());
         }
+
+	    private void RecalculateHealthMultiplier()
+	    {
+	        int numberOfBacteriaInProximity = 0;
+	        int n = Bacteria.AllBacteria.Count;
+	        for (var i = 0; i < n; i++)
+	        {
+	            Bacteria otherBacteria = Bacteria.AllBacteria[i];
+	            if (otherBacteria != this && Vector3.Distance(transform.position, otherBacteria.transform.position) < 1.5f)
+	                numberOfBacteriaInProximity++;
+	        }
+	        _healthMultiplier = 1f + numberOfBacteriaInProximity * 0.2f;
+	    }
+
+	    public int ReduceHealth(int damage)
+	    {
+	        _damageReceived += damage;
+	        if (_healthPoints <= 0)
+	            Die();
+	        return _healthPoints;
+	    }
+
+	    private void Die()
+	    {
+	        Bacteria.AllBacteria.Remove(this);
+	        if (OnDead != null)
+	            OnDead();
+	        Destroy(gameObject);
+	    }
 
         private void SetNewHeading()
         {
