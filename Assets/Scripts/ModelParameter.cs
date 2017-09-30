@@ -24,7 +24,7 @@ namespace Assets.Scripts
 	{
 		public int NumberOfBacteria = 1;
 		public int NumberOfMacrophages = 3;
-		public int ChemokineDiffusionConstant = 6000;
+		public int ChemokineDiffusionConstant = 2000;//6000
 		public int AntigenPerBacteria = 1;
 		public float MovementInSessilePhase = 0f;
 		public float MovementInFlowingPhase = 3f;
