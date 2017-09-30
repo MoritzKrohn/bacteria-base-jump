@@ -26,7 +26,7 @@ namespace Assets.Scripts
 		public int NumberOfMacrophages = 3;
 		public int ChemokineDiffusionConstant = 6000;
 		public int AntigenPerBacteria = 1;
-		public float MovementInSessilePhase = 0.1f;
+		public float MovementInSessilePhase = 0f;
 		public float MovementInFlowingPhase = 3f;
 		public double RadialFlow = 4.2e-2;
 		public float BacteriaDoublingTime = 200F; // every 3.32 hours
