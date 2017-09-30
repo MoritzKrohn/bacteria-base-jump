@@ -7,6 +7,9 @@ namespace Assets.Scripts
 {
     public class Cell : MonoBehaviour
     {
+        private float[] values;
+        private int valueAmount;
+        private int ptr = 0;
         private ModelParameter mParameter;
         private GameController mGameController;
         private ParticleSystem mChemokineEmitter;
@@ -25,6 +28,8 @@ namespace Assets.Scripts
             mChemokineEmitter = GetComponent<ParticleSystem>();
 
             mParameter = mGameController.Parameter;
+            valueAmount = GameObject.FindObjectsOfType<Bacteria>().Length;
+            values = new float[valueAmount];
         }
 
         private void OnTriggerEnter(Collider e)
@@ -70,22 +75,71 @@ namespace Assets.Scripts
         {
         }
 
+        private float max, min;
+
         public float Chemokine
         {
             set
             {
                 mChemokine = value;
-                //var input = Mathf.Clamp01(value * 1e4F);
-                var input = Mathf.InverseLerp(1e-6F, 1e-3F, value);
-                ChemokineLevels = input*100;
-                
+
+                /*if (values != null)
+                {
+                    values[ptr++] = value;
+
+                    if (ptr >= values.Length)
+                    {
+                        ptr = 0;
+                    }
+
+                    
+                        max = values[0];
+                        min = values[0];
+                        for (int i = 1; i < values.Length; i++)
+                        {
+                            var val = values[i];
+                            if (val > max)
+                            {
+                                max = val;
+                            }
+                            if (val < min)
+                            {
+                                min = val;
+                            }
+
+                        }
+                    
+
+
+                    Debug.LogWarning("min:" + min + ", max:  " + max);
+
+                    var input = Mathf.InverseLerp(min, max, value);
+                    //var input = Mathf.InverseLerp(1e-6F, 1e-4F, value);
+
+                    ChemokineLevels = input * 100;
+
+                    if (mChemokineEmitter)
+                    {
+                        var m = mChemokineEmitter.main;
+                        var e = mChemokineEmitter.emission;
+                        var rateOverTime = (int)(input * 50);
+                        e.rateOverTime = rateOverTime < 3 ? 0 : rateOverTime;
+                        m.maxParticles = (int)(input * 20);
+                    }
+                }*/
+
+                //var input = Mathf.InverseLerp(min, max, value);
+                var input = Mathf.InverseLerp(1e-6F, 1e-4F, value);
+
+                ChemokineLevels = input * 100;
+
                 if (mChemokineEmitter)
                 {
                     var m = mChemokineEmitter.main;
                     var e = mChemokineEmitter.emission;
-                    var rateOverTime = (int) (input * 50);
+                    var rateOverTime = (int)(input * 50);
                     e.rateOverTime = rateOverTime < 3 ? 0 : rateOverTime;
-                    m.maxParticles = (int)(input*20);
+                    m.maxParticles = (int)(input * 20);
                 }
             }
             get
