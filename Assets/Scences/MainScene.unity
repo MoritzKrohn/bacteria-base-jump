@@ -354,55 +354,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 309876063}
---- !u!1 &436321168
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1702227776663476, guid: 0d47e307b3f23154ab18cc72788ab887,
-    type: 2}
-  m_PrefabInternal: {fileID: 2087566402}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 436321170}
-  - component: {fileID: 436321169}
-  m_Layer: 8
-  m_Name: Alveolus
-  m_TagString: Alveolus
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &436321169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114297737899600892, guid: 0d47e307b3f23154ab18cc72788ab887,
-    type: 2}
-  m_PrefabInternal: {fileID: 2087566402}
-  m_GameObject: {fileID: 436321168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbf6b7364013bd048ad582033001784b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cell: {fileID: 1258150719655416, guid: 835222c98930dbd4195c7724987b0e5a, type: 2}
-  cellTileWidth: 1.5
-  cellTileHeight: 1.11
-  cellHorizontalCount: 13
-  cellVerticalCount: 9
-  MacrophageCount: 0
---- !u!4 &436321170
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4038211767277252, guid: 0d47e307b3f23154ab18cc72788ab887,
-    type: 2}
-  m_PrefabInternal: {fileID: 2087566402}
-  m_GameObject: {fileID: 436321168}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &565262516
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,7 +517,6 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e5fce7fa176e0b74eb549a4730b29b8e, type: 2}
-  m_RootGameObject: {fileID: 1538831742}
   m_IsPrefabParent: 0
 --- !u!1 &1039943168
 GameObject:
@@ -614,7 +564,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -231976563
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fde6626a2f6b6ed448f4bedd6de88f4c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -882,58 +832,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!1 &1538831742
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1039691332523982, guid: e5fce7fa176e0b74eb549a4730b29b8e,
-    type: 2}
-  m_PrefabInternal: {fileID: 889698904}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1538831744}
-  - component: {fileID: 1538831743}
-  m_Layer: 0
-  m_Name: GameController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1538831743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114790078569343462, guid: e5fce7fa176e0b74eb549a4730b29b8e,
-    type: 2}
-  m_PrefabInternal: {fileID: 889698904}
-  m_GameObject: {fileID: 1538831742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e219859ecc2e05418b81b717b573f59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bacteria: {fileID: 1799666318382658, guid: eed220d75f3da064b88e0a97d2f21b38, type: 2}
-  macrophage: {fileID: 1339925143090320, guid: 564d3f268b2a7c34f9fcb6849ce4f21d, type: 2}
-  NumberOfBacteria: 20
-  NumberOfMacrophages: 2
---- !u!224 &1538831744
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 224898059939681898, guid: e5fce7fa176e0b74eb549a4730b29b8e,
-    type: 2}
-  m_PrefabInternal: {fileID: 889698904}
-  m_GameObject: {fileID: 1538831742}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -73, y: 329}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1925418860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,7 +1034,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114297737899600892, guid: 0d47e307b3f23154ab18cc72788ab887,
+        type: 2}
+      propertyPath: cell
+      value: 
+      objectReference: {fileID: 1258150719655416, guid: b852cd52281055b4b87e965531db03b8,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0d47e307b3f23154ab18cc72788ab887, type: 2}
-  m_RootGameObject: {fileID: 436321168}
   m_IsPrefabParent: 0
