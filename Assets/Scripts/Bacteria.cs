@@ -20,13 +20,18 @@ namespace Assets.Scripts
         public float X { get { return transform.position.x; } }
         public float Y { get { return transform.position.y; } }
 
-	    private int _healthPoints = 100;
+	    private float _healthMultiplier = 1f;
+	    private int _damageReceived = 0;
+
+	    private int _healthPoints
+	    {
+	        get { return Mathf.RoundToInt(mParameter.BacteriaDefaultHealth * _healthMultiplier) - _damageReceived; }
+	    }
         public int HealthPoints { get { return _healthPoints;  } }
 
 	    public int ReduceHealth(int damage)
 	    {
-            if (_healthPoints > 0)
-	            _healthPoints -= damage;
+	        _damageReceived += damage;
 	        if (_healthPoints <= 0)
 	            Die();
 	        return _healthPoints;
