@@ -46,6 +46,8 @@ namespace Assets.Scripts
             GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
             mParameter = gc.Parameter;
 
+            mMovementState = MovementStates.SessileState;
+
             StartCoroutine(NewHeadingCoroutine());
         }
 
@@ -84,7 +86,7 @@ namespace Assets.Scripts
 		/// </summary>
 		public void Update()
 		{
-			InterchangePhase();
+			/*InterchangePhase();
 			InterchangePhase();			
             
 			var x = (float)(Mathf.Cos(mCurrentAngle) * StepSize);
@@ -95,7 +97,7 @@ namespace Assets.Scripts
             // Apply and smooth out movement
             Vector3 movement = new Vector3(x, y, 0);
             movement *= Time.deltaTime;
-			transform.Translate(movement);
+			transform.Translate(movement);*/
         }
 
         void PlayerMovementClamping()

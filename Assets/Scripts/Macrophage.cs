@@ -7,6 +7,7 @@ namespace Assets.Scripts
 {
 	public class Macrophage : MonoBehaviour
 	{
+	    public bool DoDebug = false;
         // Model parameter
         ModelParameter mParameter;
         private Rigidbody2D mRigidBody;
@@ -109,12 +110,19 @@ namespace Assets.Scripts
                     break;
                 case MovementStates.BaceriaInRange:
                     var bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
-                    Bacteria nearestBact = bactList
-                        .OrderByDescending(b => Vector2.Distance(transform.position, b.transform.position))
-                        .First()
-                        .GetComponent<Bacteria>();
-                    target = nearestBact.gameObject;
-                    mDirection = (target.transform.position - transform.position).normalized;
+                    var nearestBactObj = bactList
+                        .OrderBy(b => Vector2.Distance(transform.position, b.transform.position))
+                        .FirstOrDefault();
+                    if (nearestBactObj != null)
+                    {
+                        Bacteria nearestBact = nearestBactObj.GetComponent<Bacteria>();
+                        target = nearestBact.gameObject;
+                        mDirection = (target.transform.position - transform.position).normalized;
+                    }
+                    /*Bacteria nearestBact = bactList
+                        .OrderBy(b => Vector2.Distance(transform.position, b.transform.position))
+                        .FirstOrDefault()
+                        .GetComponent<Bacteria>();*/
                     break;
                 default:
                     Debug.LogError("Macrophage state not implemented!");
@@ -139,7 +147,8 @@ namespace Assets.Scripts
         {
             PlayerMovementClamping();
             var speed = mParameter.MacrophageMovement * 1;
-            Debug.DrawLine(transform.position, target.transform.position, Color.black);
+            if (target)
+                Debug.DrawLine(transform.position, target.transform.position, Color.black);
             Vector2 myPosition = transform.position; // trick to convert a Vector3 to Vector2
             mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
             // If our spider senses are tingeling and we smell chemokine we switch to search mode.
