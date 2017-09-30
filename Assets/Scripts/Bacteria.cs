@@ -6,7 +6,10 @@ namespace Assets.Scripts
 {
 	public class Bacteria : MonoBehaviour
 	{
-		private MovementStates mMovementState = MovementStates.SessileState;
+	    public delegate void DeathEvent();
+	    public event DeathEvent OnDead;
+
+        private MovementStates mMovementState = MovementStates.SessileState;
         private ModelParameter mParameter;
 
         // Individual bacteria are between 0.5 and 1.25 micrometers in diameter. From: https://microbewiki.kenyon.edu/index.php/Streptococcus_pneumoniae
@@ -16,6 +19,25 @@ namespace Assets.Scripts
 
         public float X { get { return transform.position.x; } }
         public float Y { get { return transform.position.y; } }
+
+	    private int _healthPoints = 100;
+        public int HealthPoints { get { return _healthPoints;  } }
+
+	    public int ReduceHealth(int damage)
+	    {
+            if (_healthPoints > 0)
+	            _healthPoints -= damage;
+	        if (_healthPoints <= 0)
+	            Die();
+	        return _healthPoints;
+	    }
+
+	    private void Die()
+	    {
+	        if (OnDead != null)
+	            OnDead();
+            Destroy(gameObject);
+	    }
 
         public float StepSize
 		{
