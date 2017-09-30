@@ -70,12 +70,14 @@ namespace Assets.Scripts
                 //var input = Mathf.Clamp01(value * 1e4F);
                 var input = Mathf.InverseLerp(1e-6F, 1e-3F, value);
                 ChemokineLevels = input*100;
+                
                 if (mChemokineEmitter)
                 {
                     var m = mChemokineEmitter.main;
                     var e = mChemokineEmitter.emission;
+                    var rateOverTime = (int) (input * 50);
                     m.maxParticles = (int)(input*100);
-                    e.rateOverTime = (int)(input*50);
+                    e.rateOverTime = rateOverTime < 3 ? 0 : rateOverTime;
                 }
             }
             get
