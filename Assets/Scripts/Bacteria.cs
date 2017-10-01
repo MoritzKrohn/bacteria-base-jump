@@ -57,7 +57,7 @@ namespace Assets.Scripts
 			}
 		}
 		public MovementStates State { get { return this.mMovementState; } }
-
+        
 		public enum MovementStates
 		{
 			SessileState,
@@ -66,9 +66,9 @@ namespace Assets.Scripts
 
         public void Start()
         {
-            GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
-            floorSize = gc.floor.GetComponent<Collider>().bounds.size;
-            mParameter = gc.Parameter;
+            _gameController = GameObject.Find("GameController").GetComponent<GameController>();
+            floorSize = _gameController.floor.GetComponent<Collider>().bounds.size;
+            mParameter = _gameController.Parameter;
             mMovementState = MovementStates.SessileState;
             Bacteria.AllBacteria.Add(this);
             Bacteria.OnLanded += RecalculateHealthMultiplier;
@@ -76,6 +76,7 @@ namespace Assets.Scripts
                 Bacteria.OnLanded.Invoke();
             
             StartCoroutine(NewHeadingCoroutine());
+            StartCoroutine(DoubleBacteria());
         }
 
 	    public void CalculateCluster()
@@ -130,7 +131,32 @@ namespace Assets.Scripts
 	        _healthMultiplier = 1f + numberOfBacteriaInProximity * 0.2f;
 	    }
 
-	    public int ReduceHealth(int damage)
+	    private int doublingCtr = 0;
+	    private GameController _gameController;
+
+	    /// <summary>
+	    /// Double bacterias every Parameter.BacteriaDoublingTime seconds. See Modelparameters to change
+	    /// </summary>
+	    /// <returns>IEnumerator object</returns>
+	    IEnumerator DoubleBacteria()
+	    {
+	        while (true)
+	        {
+	            doublingCtr++;
+                if (doublingCtr > (int)Mathf.Max(200 - ClusterSize * ClusterSize * 5, 30))
+                {
+                    doublingCtr = 0;
+	                Debug.LogWarning("doubling bacteria =)");
+                    _gameController.CreateBacterium(transform.position.x+ Random.value * 10, transform.position.z + Random.value * 10,true);
+                }
+                
+	            yield return new WaitForSeconds(1);
+	        }
+	    }
+
+	    
+
+        public int ReduceHealth(int damage)
 	    {
 	        _damageReceived += damage;
 	        if (_healthPoints <= 0)

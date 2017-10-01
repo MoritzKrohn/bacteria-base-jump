@@ -13,7 +13,7 @@ namespace Assets.Scripts
     {
         public static void CreateBacteriaAtPoint(float x, float y)
         {
-            instance.CreateBacterium(x, y);
+            instance.CreateBacterium(x, y, false);
         }
 
         public Vector3 ScreenSize { get { return new Vector3(Screen.width, Screen.height, 0); } }
@@ -65,7 +65,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-           
+            
         }
 
         private void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
@@ -116,13 +116,14 @@ namespace Assets.Scripts
 
             // This triggers the doubling timer for the bacteria
             mStartTime = Time.realtimeSinceStartup;
-            //StartCoroutine(DoubleBacteria());
         }
 
-        void CreateBacterium(float posX, float posY)
+        public Bacteria CreateBacterium(float posX, float posZ,bool randomRot)
         {
-            GameObject bact = Instantiate(bacteria, new Vector3(posX, posY, 0), Quaternion.identity);
-            bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
+            GameObject bact = Instantiate(bacteria, new Vector3(posX, 0, posZ), randomRot? Quaternion.Euler(0, Random.Range(0, 360), 0):Quaternion.identity, GameObject.FindGameObjectWithTag("Bacterias").transform);
+            Bacteria component = bact.GetComponent<Bacteria>();
+            component.CalculateCluster();
+            return component;
         }
 
         void Update()
@@ -173,27 +174,7 @@ namespace Assets.Scripts
             bactList.ForEach(b => Destroy(b.gameObject));
         }
 
-        /// <summary>
-        /// Double bacterias every Parameter.BacteriaDoublingTime seconds. See Modelparameters to change
-        /// </summary>
-        /// <returns>IEnumerator object</returns>
-		IEnumerator DoubleBacteria()
-		{
-			while (true)
-			{
-				Bacteria[] bactList = FindObjectsOfType(typeof(Bacteria)) as Bacteria[];
-				for (int i = 0; i < bactList.Length; i++)
-				{
-					var b = bactList[i];
-					Vector3 spawnPosition = new Vector3(b.transform.position.x, 0 ,b.transform.position.z);
-					Quaternion spawnRotation = Quaternion.identity;
-                    var bact = Instantiate(bacteria, spawnPosition, spawnRotation);
-                    bact.transform.parent = GameObject.FindGameObjectWithTag("Bacterias").transform;
-                }
-				yield return new WaitForSeconds(Parameter.BacteriaDoublingTime);
-			}
-		}
-
+        
         /// <summary>
         /// Helper function to generate gaussian distributed random values
         /// </summary>
