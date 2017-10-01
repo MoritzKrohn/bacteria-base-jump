@@ -170,8 +170,8 @@ namespace Assets.Scripts
                 Debug.DrawLine(transform.position, target.transform.position, Color.blue);
 
             Vector3 myPosition = transform.position; // trick to convert a Vector3 to Vector2
-
-            mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, myPosition + mDirection, speed * Time.deltaTime);
+            //mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);
             // If our spider senses are tingeling and we smell chemokine we switch to search mode.
             // But only if we don't have a bacteria inside. Need to exterminate them first
             if (MovementState != MovementStates.BaceriaInRange)
