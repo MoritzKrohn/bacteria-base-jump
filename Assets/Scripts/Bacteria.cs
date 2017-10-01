@@ -10,6 +10,7 @@ namespace Assets.Scripts
 	{
 	    public HashSet<Cell> CloseToCells = new HashSet<Cell>();
 	    public HashSet<Bacteria> Cluster = new HashSet<Bacteria>();
+	    public int ClusterSize;
         private MovementStates mMovementState = MovementStates.SessileState;
 	    public event DeathEvent OnDead; 
 	    public delegate void DeathEvent();
@@ -105,13 +106,15 @@ namespace Assets.Scripts
             }
 
 	        Cluster = toUse;
-
+	        ClusterSize = Cluster.Count;
 	        
 	        foreach (Bacteria bacteria in nearestBactObj)
 	        {
 	            bacteria.CalculateCluster(toIgnore,toUse);
 	        }
 	    }
+
+
 
 	    private void RecalculateHealthMultiplier()
 	    {
@@ -137,7 +140,15 @@ namespace Assets.Scripts
 
 	    private void Die()
 	    {
+            Debug.LogWarning("Bacteria was eaten");
+	        ;
 	        Cluster.Remove(this);
+	        foreach (Bacteria bacteria in Cluster)
+	        {
+	            bacteria.ClusterSize = Cluster.Count;
+	        }
+	        ClusterSize = Cluster.Count;
+            
 	        Bacteria.AllBacteria.Remove(this);
 	        if (OnDead != null)
 	            OnDead();
