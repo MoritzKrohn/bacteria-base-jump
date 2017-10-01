@@ -16,6 +16,8 @@ namespace Assets.Scripts
             instance.CreateBacterium(x, y, false);
         }
 
+        public static AudioSource SoundSource { get { return instance.AudioSource;  } }
+
         public Vector3 ScreenSize { get { return new Vector3(Screen.width, Screen.height, 0); } }
 
 		public float Width { get { return floor.GetComponent<Collider>().bounds.size.x; } }
@@ -28,6 +30,8 @@ namespace Assets.Scripts
         public GameObject floor;
         public GameObject bacteria;
         public GameObject macrophage;
+
+        public AudioSource AudioSource;
 
         public ModelParameter Parameter = new ModelParameter() { BacteriaDoublingTime = 20, NumberOfBacteria = 100 };
 

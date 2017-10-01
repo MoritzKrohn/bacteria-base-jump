@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GameUIScripts : MonoBehaviour
 {
+    public AudioSource SoundSource;
+    public AudioClip PlayButtonSound;
 
     public void StartGame()
     {
@@ -16,6 +18,7 @@ public class GameUIScripts : MonoBehaviour
         var macroSlider = GameObject.Find("MacroSlider").GetComponent<Slider>();
         gc.NumberOfBacteria = (int)bactSlider.value;
         gc.NumberOfMacrophages = (int)macroSlider.value;*/
+        SoundSource.PlayOneShot(PlayButtonSound);
         SceneManager.LoadScene(1);
     }
 

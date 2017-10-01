@@ -8,6 +8,7 @@ namespace Assets.Scripts
     {
         public GameObject BacteriaPrefab;
         public GameObject PlayerModel;
+        public AudioClip LandingSound;
 
         private Rigidbody _rigidBody;
         private bool _falling = true;
@@ -55,6 +56,7 @@ namespace Assets.Scripts
         {
             if (c.transform.tag == "Floor")
             {
+                GameController.SoundSource.PlayOneShot(LandingSound);
                 _falling = false;
                 InstantiateBacterium();
                 _returning = true;

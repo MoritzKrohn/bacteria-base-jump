@@ -8,6 +8,7 @@ namespace Assets.Scripts
 {
 	public class Bacteria : MonoBehaviour
 	{
+	    
 	    public HashSet<Cell> CloseToCells = new HashSet<Cell>();
 	    public HashSet<Bacteria> Cluster = new HashSet<Bacteria>();
 	    public int ClusterSize;
@@ -73,6 +74,7 @@ namespace Assets.Scripts
             GetComponent<LineRenderer>().enabled = false;
             Bacteria.AllBacteria.Add(this);
             Bacteria.OnLanded += RecalculateHealthMultiplier;
+            
             if (Bacteria.OnLanded != null)
                 Bacteria.OnLanded.Invoke();
             
