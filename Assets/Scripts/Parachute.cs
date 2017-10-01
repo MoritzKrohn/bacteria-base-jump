@@ -57,7 +57,6 @@ namespace Assets.Scripts
                 _returning = true;
                 PlayerModel.SetActive(false);
             }
-            
         }
 
         private void InstantiateBacterium()

@@ -79,18 +79,16 @@ namespace Assets.Scripts
 
 	    public void CalculateCluster()
 	    {
-	        CalculateCluster(new HashSet<Bacteria>());
+	        CalculateCluster(new HashSet<Bacteria>(),new HashSet<Bacteria>());
 	    }
 
-	    private void CalculateCluster(HashSet<Bacteria> toIgnore)
+	    private void CalculateCluster(HashSet<Bacteria> toIgnore, HashSet<Bacteria> toUse)
 	    {
             if(toIgnore.Contains(this))
                 return;
 
-	        if (Cluster.Count == 0)
-	        {
-	            Cluster.Add(this);
-	        }
+	        toIgnore.Add(this);
+            toUse.Add(this);
 
             // close bacterias
 	        List<GameObject> bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
@@ -100,18 +98,18 @@ namespace Assets.Scripts
                 .ToArray();
 
             // aggregated bacterias in near clusters
-            HashSet<Bacteria> nearestClusterBacterias = new HashSet<Bacteria>();
+            
             foreach (Bacteria bacteria in nearestBactObj.SelectMany(b=>b.Cluster))
             {
-                nearestClusterBacterias.Add(bacteria);
+                toUse.Add(bacteria);
             }
 
-	        Cluster = nearestClusterBacterias;
+	        Cluster = toUse;
 
-	        toIgnore.Add(this);
+	        
 	        foreach (Bacteria bacteria in nearestBactObj)
 	        {
-	            bacteria.CalculateCluster(toIgnore);
+	            bacteria.CalculateCluster(toIgnore,toUse);
 	        }
 	    }
 
@@ -139,6 +137,7 @@ namespace Assets.Scripts
 
 	    private void Die()
 	    {
+	        Cluster.Remove(this);
 	        Bacteria.AllBacteria.Remove(this);
 	        if (OnDead != null)
 	            OnDead();
