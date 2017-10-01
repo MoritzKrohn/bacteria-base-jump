@@ -138,9 +138,9 @@ namespace Assets.Scripts
             lineRenderer.SetPosition(i, CalculateConnectionVector(transform.position));
 	    }
 
-	    private Vector3 CalculateConnectionVector(Vector3 bacteriaPosition)
+	    private Vector3 CalculateConnectionVector(Vector3 bacteriaPosition)// obsolete
 	    {
-	        return new Vector3(bacteriaPosition.x, bacteriaPosition.y - 0.5f, bacteriaPosition.z);
+	        return new Vector3(bacteriaPosition.x, bacteriaPosition.y/* - 0.5f*/, bacteriaPosition.z);
 	    }
 
 

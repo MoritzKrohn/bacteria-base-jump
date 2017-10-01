@@ -18,6 +18,9 @@ namespace Assets.Scripts
 
         public static AudioSource SoundSource { get { return instance.AudioSource;  } }
 
+        public AudioClip GameWonSound;
+        public AudioClip GameOverSound;
+
         public Vector3 ScreenSize { get { return new Vector3(Screen.width, Screen.height, 0); } }
 
 		public float Width { get { return floor.GetComponent<Collider>().bounds.size.x; } }
@@ -163,12 +166,14 @@ namespace Assets.Scripts
                 {
                     lost = true;
                     _uiFinalText.text = "You lost! Press escape to return to the menu.";
+                    AudioSource.PlayOneShot(GameOverSound);
                 }
 
                 if (BacteriaCount > 100 && !lost && !won)
                 {
                     won = true;
                     _uiFinalText.text = "You won! Press escape to return to the menu.";
+                    AudioSource.PlayOneShot(GameWonSound);
                     BacteriaRetries = 0;
                 }
                     

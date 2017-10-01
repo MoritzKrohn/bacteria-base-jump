@@ -1436,6 +1436,16 @@ Prefab:
       propertyPath: AudioSource
       value: 
       objectReference: {fileID: 367065523}
+    - target: {fileID: 114790078569343462, guid: e5fce7fa176e0b74eb549a4730b29b8e,
+        type: 2}
+      propertyPath: GameOverSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d19d7f366cd71b449a265eb93e3e4315, type: 3}
+    - target: {fileID: 114790078569343462, guid: e5fce7fa176e0b74eb549a4730b29b8e,
+        type: 2}
+      propertyPath: GameWonSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7fd69c4527e6cab4091b1df2e023c35e, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e5fce7fa176e0b74eb549a4730b29b8e, type: 2}
   m_IsPrefabParent: 0
