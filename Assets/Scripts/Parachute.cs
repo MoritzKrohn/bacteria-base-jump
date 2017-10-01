@@ -48,7 +48,6 @@ namespace Assets.Scripts
 
         void OnCollisionEnter(Collision c)
         {
-            Debug.LogWarning("test");
             if (c.transform.tag == "Floor")
             {
                 _falling = false;

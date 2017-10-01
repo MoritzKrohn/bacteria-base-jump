@@ -100,7 +100,8 @@ namespace Assets.Scripts
 	    private void Die()
 	    {
 	        Bacteria.AllBacteria.Remove(this);
-	        if (OnDead != null)
+	        Bacteria.OnLanded -= RecalculateHealthMultiplier;
+            if (OnDead != null)
 	            OnDead();
 	        Destroy(gameObject);
 	    }
