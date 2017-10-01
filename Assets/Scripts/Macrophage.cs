@@ -239,7 +239,7 @@ namespace Assets.Scripts
             if (e.gameObject.name.Contains("Bacteria"))
             {
                 var distToBact = Vector3.Distance(transform.position, e.transform.position);
-                var macBounds = 1F;
+                var macBounds = 1.4F;
                 if (distToBact < macBounds)
                 {
 

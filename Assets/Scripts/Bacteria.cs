@@ -150,7 +150,8 @@ namespace Assets.Scripts
 	        ClusterSize = Cluster.Count;
             
 	        Bacteria.AllBacteria.Remove(this);
-	        if (OnDead != null)
+	        Bacteria.OnLanded -= RecalculateHealthMultiplier;
+            if (OnDead != null)
 	            OnDead();
 	        Destroy(gameObject);
 	    }
