@@ -57,7 +57,7 @@ namespace Assets.Scripts
 			}
 		}
 		public MovementStates State { get { return this.mMovementState; } }
-        
+
 		public enum MovementStates
 		{
 			SessileState,
@@ -66,9 +66,9 @@ namespace Assets.Scripts
 
         public void Start()
         {
-            _gameController = GameObject.Find("GameController").GetComponent<GameController>();
-            floorSize = _gameController.floor.GetComponent<Collider>().bounds.size;
-            mParameter = _gameController.Parameter;
+            GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
+            floorSize = gc.floor.GetComponent<Collider>().bounds.size;
+            mParameter = gc.Parameter;
             mMovementState = MovementStates.SessileState;
             GetComponent<LineRenderer>().enabled = false;
             Bacteria.AllBacteria.Add(this);
@@ -77,7 +77,6 @@ namespace Assets.Scripts
                 Bacteria.OnLanded.Invoke();
             
             StartCoroutine(NewHeadingCoroutine());
-            StartCoroutine(DoubleBacteria());
         }
 
 	    public void CalculateCluster()
@@ -122,8 +121,8 @@ namespace Assets.Scripts
 	        {
 	            if (bacteria != null)
 	            {
-	                lineRenderer.SetPosition(i, bacteria.transform.position);
-	                lineRenderer.SetPosition(i + 1, transform.position);
+	                lineRenderer.SetPosition(i, CalculateConnectionVector(bacteria.transform.position));
+	                lineRenderer.SetPosition(i + 1, CalculateConnectionVector(transform.position));
 
 	                i += 2;
                 }
@@ -132,9 +131,13 @@ namespace Assets.Scripts
 	                lineRenderer.positionCount -= 2;
 	            }
 	        }
-            lineRenderer.SetPosition(i, transform.position);
+            lineRenderer.SetPosition(i, CalculateConnectionVector(transform.position));
 	    }
 
+	    private Vector3 CalculateConnectionVector(Vector3 bacteriaPosition)
+	    {
+	        return new Vector3(bacteriaPosition.x, bacteriaPosition.y - 0.5f, bacteriaPosition.z);
+	    }
 
 
 	    private void RecalculateHealthMultiplier()
@@ -151,32 +154,7 @@ namespace Assets.Scripts
 	        _healthMultiplier = 1f + numberOfBacteriaInProximity * 0.2f;
 	    }
 
-	    private int doublingCtr = 0;
-	    private GameController _gameController;
-
-	    /// <summary>
-	    /// Double bacterias every Parameter.BacteriaDoublingTime seconds. See Modelparameters to change
-	    /// </summary>
-	    /// <returns>IEnumerator object</returns>
-	    IEnumerator DoubleBacteria()
-	    {
-	        while (true)
-	        {
-	            doublingCtr++;
-                if (doublingCtr > (int)Mathf.Max(200 - ClusterSize * ClusterSize * 5, 30))
-                {
-                    doublingCtr = 0;
-	                Debug.LogWarning("doubling bacteria =)");
-                    _gameController.CreateBacterium(transform.position.x+ Random.value * 10, transform.position.z + Random.value * 10,true);
-                }
-                
-	            yield return new WaitForSeconds(1);
-	        }
-	    }
-
-	    
-
-        public int ReduceHealth(int damage)
+	    public int ReduceHealth(int damage)
 	    {
 	        _damageReceived += damage;
 	        if (_healthPoints <= 0)
