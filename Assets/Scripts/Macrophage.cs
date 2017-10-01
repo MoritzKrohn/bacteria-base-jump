@@ -170,6 +170,11 @@ namespace Assets.Scripts
             if(target != null)
                 Debug.DrawLine(transform.position, target.transform.position, Color.blue);
 
+            if (MovementState == MovementStates.BaceriaInRange)
+            {
+                speed *= 4;
+            }
+
             Vector3 myPosition = transform.position; // trick to convert a Vector3 to Vector2
             transform.position = Vector3.MoveTowards(transform.position, myPosition + mDirection, speed * Time.deltaTime);
             //mRigidBody.MovePosition(myPosition + mDirection * speed * Time.deltaTime);

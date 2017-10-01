@@ -42,7 +42,7 @@ namespace Assets.Scripts
         public int EpithelialCellWidth = 30;
         public float SychronisationTime = 5; // Interval of time between synchronization of models in minutes aka integration step time
         public int CellDimension { get { return (EpithelialCellWidth * EpithelialCellsPerRow) / 2; } }
-	    public int BacteriaDefaultHealth = 100;
+	    public int BacteriaDefaultHealth = 40;
 	    public int MacrophageDamage = 10;
 
 	}
