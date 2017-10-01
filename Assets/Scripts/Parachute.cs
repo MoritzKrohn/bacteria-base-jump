@@ -15,6 +15,8 @@ namespace Assets.Scripts
 
         private Vector3 _origin;
 
+        private float _fallingSpeed = 50f;
+
         void Awake()
         {
             _rigidBody = GetComponent<Rigidbody>();
@@ -26,8 +28,9 @@ namespace Assets.Scripts
         {
             if (_falling)
             {
+                _fallingSpeed++;
                 var mousePosition = Input.mousePosition;
-                var direction = new Vector3(mousePosition.x - Screen.width / 2, -50, mousePosition.y - Screen.height / 2);
+                var direction = new Vector3(mousePosition.x - Screen.width / 2, -_fallingSpeed, mousePosition.y - Screen.height / 2);
                 direction /= 30;
                 _rigidBody.AddForce(direction);
 
@@ -42,6 +45,7 @@ namespace Assets.Scripts
                     _returning = false;
                     _falling = true;
                     PlayerModel.SetActive(true);
+                    _fallingSpeed = 50;
                 }
                     
             }

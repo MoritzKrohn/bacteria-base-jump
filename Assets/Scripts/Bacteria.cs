@@ -70,6 +70,7 @@ namespace Assets.Scripts
             floorSize = _gameController.floor.GetComponent<Collider>().bounds.size;
             mParameter = _gameController.Parameter;
             mMovementState = MovementStates.SessileState;
+            GetComponent<LineRenderer>().enabled = false;
             Bacteria.AllBacteria.Add(this);
             Bacteria.OnLanded += RecalculateHealthMultiplier;
             if (Bacteria.OnLanded != null)
@@ -95,7 +96,7 @@ namespace Assets.Scripts
             // close bacterias
 	        List<GameObject> bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
 	        Bacteria[] nearestBactObj = bactList
-                .Where(b => Vector3.Distance(transform.position, b.transform.position)<10f)
+                .Where(b => Vector3.Distance(transform.position, b.transform.position)<20f)
                 .Select(b=>b.GetComponent<Bacteria>())
                 .ToArray();
 
@@ -113,6 +114,25 @@ namespace Assets.Scripts
 	        {
 	            bacteria.CalculateCluster(toIgnore,toUse);
 	        }
+	        var lineRenderer = GetComponent<LineRenderer>();
+	        int i = 0;
+	        lineRenderer.positionCount = ClusterSize * 2 + 1;
+	        lineRenderer.enabled = ClusterSize > 1;
+	        foreach (Bacteria bacteria in Cluster)
+	        {
+	            if (bacteria != null)
+	            {
+	                lineRenderer.SetPosition(i, bacteria.transform.position);
+	                lineRenderer.SetPosition(i + 1, transform.position);
+
+	                i += 2;
+                }
+	            else
+	            {
+	                lineRenderer.positionCount -= 2;
+	            }
+	        }
+            lineRenderer.SetPosition(i, transform.position);
 	    }
 
 

@@ -21,6 +21,7 @@ namespace Assets.Scripts
         private Vector3 mDirection = Vector3.one;
         private GameObject target;
         public Vector2 velocity;
+	    public Transform TopLight;
 
 	    private Bacteria _bacteriaBeingEaten = null;
 
@@ -187,6 +188,8 @@ namespace Assets.Scripts
                         MovementState = lastMovementState;
                 }
             }
+            if (TopLight)
+                TopLight.transform.position = new Vector3(transform.position.x, transform.position.y + 6, transform.position.z);
         }
 
         /// <summary>
