@@ -68,6 +68,7 @@ namespace Assets.Scripts
         public void Start()
         {
             GameController gc = GameObject.Find("GameController").GetComponent<GameController>();
+            _gameController = gc;
             floorSize = gc.floor.GetComponent<Collider>().bounds.size;
             mParameter = gc.Parameter;
             mMovementState = MovementStates.SessileState;
