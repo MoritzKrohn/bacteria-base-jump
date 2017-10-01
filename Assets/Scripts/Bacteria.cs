@@ -79,6 +79,7 @@ namespace Assets.Scripts
                 Bacteria.OnLanded.Invoke();
             
             StartCoroutine(NewHeadingCoroutine());
+            StartCoroutine(DoubleBacteria());
         }
 
 	    public void CalculateCluster()
