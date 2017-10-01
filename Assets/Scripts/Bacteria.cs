@@ -1,6 +1,7 @@
 ﻿//using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -8,6 +9,8 @@ namespace Assets.Scripts
 	public class Bacteria : MonoBehaviour
 	{
 	    public HashSet<Cell> CloseToCells = new HashSet<Cell>();
+	    public HashSet<Bacteria> Cluster = new HashSet<Bacteria>();
+	    public int ClusterSize;
         private MovementStates mMovementState = MovementStates.SessileState;
 	    public event DeathEvent OnDead; 
 	    public delegate void DeathEvent();
@@ -71,9 +74,47 @@ namespace Assets.Scripts
             Bacteria.OnLanded += RecalculateHealthMultiplier;
             if (Bacteria.OnLanded != null)
                 Bacteria.OnLanded.Invoke();
-
+            
             StartCoroutine(NewHeadingCoroutine());
         }
+
+	    public void CalculateCluster()
+	    {
+	        CalculateCluster(new HashSet<Bacteria>(),new HashSet<Bacteria>());
+	    }
+
+	    private void CalculateCluster(HashSet<Bacteria> toIgnore, HashSet<Bacteria> toUse)
+	    {
+            if(toIgnore.Contains(this))
+                return;
+
+	        toIgnore.Add(this);
+            toUse.Add(this);
+
+            // close bacterias
+	        List<GameObject> bactList = GameObject.FindGameObjectsWithTag("Bacteria").ToList();
+	        Bacteria[] nearestBactObj = bactList
+                .Where(b => Vector3.Distance(transform.position, b.transform.position)<10f)
+                .Select(b=>b.GetComponent<Bacteria>())
+                .ToArray();
+
+            // aggregated bacterias in near clusters
+            
+            foreach (Bacteria bacteria in nearestBactObj.SelectMany(b=>b.Cluster))
+            {
+                toUse.Add(bacteria);
+            }
+
+	        Cluster = toUse;
+	        ClusterSize = Cluster.Count;
+	        
+	        foreach (Bacteria bacteria in nearestBactObj)
+	        {
+	            bacteria.CalculateCluster(toIgnore,toUse);
+	        }
+	    }
+
+
 
 	    private void RecalculateHealthMultiplier()
 	    {
@@ -99,6 +140,15 @@ namespace Assets.Scripts
 
 	    private void Die()
 	    {
+            Debug.LogWarning("Bacteria was eaten");
+	        ;
+	        Cluster.Remove(this);
+	        foreach (Bacteria bacteria in Cluster)
+	        {
+	            bacteria.ClusterSize = Cluster.Count;
+	        }
+	        ClusterSize = Cluster.Count;
+            
 	        Bacteria.AllBacteria.Remove(this);
 	        Bacteria.OnLanded -= RecalculateHealthMultiplier;
             if (OnDead != null)

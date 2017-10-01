@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -55,12 +56,14 @@ namespace Assets.Scripts
                 _returning = true;
                 PlayerModel.SetActive(false);
             }
-            
         }
 
         private void InstantiateBacterium()
         {
             GameObject bact = Instantiate(BacteriaPrefab, PlayerModel.transform.position, PlayerModel.transform.rotation, GameObject.FindGameObjectWithTag("Bacterias").transform);
+            Bacteria component = bact.GetComponent<Bacteria>();
+            component.CalculateCluster();
+            Debug.LogWarning("Added to a cluster with "+component.Cluster.Count+" elements.");
         }
 
     }
