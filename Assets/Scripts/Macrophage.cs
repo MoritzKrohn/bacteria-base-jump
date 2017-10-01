@@ -7,6 +7,8 @@ namespace Assets.Scripts
 {
 	public class Macrophage : MonoBehaviour
 	{
+
+	    public AudioClip BiteSound;
         // Model parameter
         ModelParameter mParameter;
         private Rigidbody mRigidBody;
@@ -297,6 +299,7 @@ namespace Assets.Scripts
 	        while (_bacteriaBeingEaten != null && _bacteriaBeingEaten.HealthPoints > 0)
 	        {
 	            _bacteriaBeingEaten.ReduceHealth(_damage);
+                GameController.SoundSource.PlayOneShot(BiteSound);
 	            yield return new WaitForSeconds(0.25f);
 	        }
 	    }

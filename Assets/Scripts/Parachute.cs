@@ -8,6 +8,7 @@ namespace Assets.Scripts
     {
         public GameObject BacteriaPrefab;
         public GameObject PlayerModel;
+        public AudioClip LandingSound;
 
         private Rigidbody _rigidBody;
         private bool _falling = true;
@@ -65,6 +66,9 @@ namespace Assets.Scripts
                     _watching = true;
                     PlayerModel.GetComponent<MeshRenderer>().enabled = false;
                 }
+
+                GameController.SoundSource.PlayOneShot(LandingSound);
+
                 InstantiateBacterium();
                 _returning = true;
                 _falling = false;

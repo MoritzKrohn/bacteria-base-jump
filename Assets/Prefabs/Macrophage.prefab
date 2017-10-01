@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13574f3e4ffca34c81c70c5b0eed57b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BiteSound: {fileID: 8300000, guid: 94ad8d96fe4876246b0cd177b9e416ab, type: 3}
   velocity: {x: 0, y: 0}
   TopLight: {fileID: 4490710746507260}
   mBacteriaNear: 0
