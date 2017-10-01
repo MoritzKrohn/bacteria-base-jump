@@ -30,7 +30,7 @@ namespace Assets.Scripts
         public GameObject macrophage;
 
         public ModelParameter Parameter = new ModelParameter() { BacteriaDoublingTime = 20, NumberOfBacteria = 100 };
-
+        public int BacteriaRetries = 20;
         public int NumberOfBacteria;
         public int NumberOfMacrophages;
 
@@ -41,6 +41,10 @@ namespace Assets.Scripts
         private float mStartTime;
         private static GameController instance;
         private bool mMainSceneLoaded = false;
+
+        private bool won = false;
+        private bool lost = false;
+        private Text _uiFinalText;
 
         void Awake()
         {
@@ -91,6 +95,7 @@ namespace Assets.Scripts
             // Find our game UI
             uiBacteriaCounter = GameObject.Find("CountText").GetComponent<Text>();
             uiBacteriaDoublingTime = GameObject.Find("DoublingText").GetComponent<Text>();
+            _uiFinalText = GameObject.Find("FinalText").GetComponent<Text>();
 
             // Initialize our actors
             Vector3 spawnPosition;
@@ -141,12 +146,28 @@ namespace Assets.Scripts
                 StopAllCoroutines();
                 SceneManager.LoadScene("MainMenu");
             }
-
-            if(mMainSceneLoaded)
+		    
+            if (mMainSceneLoaded)
             {
                 // Show UI information
-                uiBacteriaDoublingTime.text = Mathf.RoundToInt(Parameter.BacteriaDoublingTime - (Time.realtimeSinceStartup - mStartTime) % Parameter.BacteriaDoublingTime).ToString();
+                uiBacteriaDoublingTime.text = BacteriaRetries.ToString();
+                //Debug.LogWarning("retries drawn");
+                //Mathf.RoundToInt(Parameter.BacteriaDoublingTime - (Time.realtimeSinceStartup - mStartTime) % Parameter.BacteriaDoublingTime).ToString();
                 uiBacteriaCounter.text = BacteriaCount.ToString();
+
+                if (BacteriaCount == 0 && BacteriaRetries < 3 && !lost && !won)
+                {
+                    lost = true;
+                    _uiFinalText.text = "You lost! Press escape to return to the menu.";
+                }
+
+                if (BacteriaCount > 100 && !lost && !won)
+                {
+                    won = true;
+                    _uiFinalText.text = "You won! Press escape to return to the menu.";
+                    BacteriaRetries = 0;
+                }
+                    
             }
         }
 

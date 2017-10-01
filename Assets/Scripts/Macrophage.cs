@@ -109,6 +109,7 @@ namespace Assets.Scripts
         /// </summary>
         private void SetNewHeading()
         {
+            
             switch (movementState)
             {
                 case MovementStates.Idle:
@@ -136,8 +137,17 @@ namespace Assets.Scripts
                     var nearestBactObj = bactList
                          .OrderBy(b => Vector3.Distance(transform.position, b.transform.position))
                         .FirstOrDefault();
+                   
+
                     if (nearestBactObj != null)
                     {
+                        if (Vector3.Distance(nearestBactObj.transform.position, transform.position) > 40)
+                        {
+                            Debug.LogWarning("hack applied ;)");
+                            MovementState = MovementStates.Idle;
+                            break;
+                        }
+
                         Bacteria nearestBact = nearestBactObj.GetComponent<Bacteria>();
                         target = nearestBact.gameObject;
                         mDirection = (target.transform.position - transform.position).normalized;
@@ -182,7 +192,7 @@ namespace Assets.Scripts
             // But only if we don't have a bacteria inside. Need to exterminate them first
             if (MovementState != MovementStates.BaceriaInRange)
             {
-                var cellList = GetObjectsAround<Cell>("Cell", 50F);
+                var cellList = GetObjectsAround<Cell>("Cell", 40F);
                 if (cellList.Count > 0 && cellList.Max(c => c.Chemokine) > 0)
                 {
                     MovementState = MovementStates.ChemokineFound;

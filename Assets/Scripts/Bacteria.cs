@@ -153,6 +153,7 @@ namespace Assets.Scripts
 
 	    private int doublingCtr = 0;
 	    private GameController _gameController;
+	    private int _doublingThreshhold;
 
 	    /// <summary>
 	    /// Double bacterias every Parameter.BacteriaDoublingTime seconds. See Modelparameters to change
@@ -162,8 +163,10 @@ namespace Assets.Scripts
 	    {
 	        while (true)
 	        {
-	            doublingCtr++;
-                if (doublingCtr > (int)Mathf.Max(200 - ClusterSize * ClusterSize * 5, 30))
+	            Debug.LogWarning("test bacteria =)");
+                doublingCtr++;
+	            _doublingThreshhold = (int)Mathf.Max(120 - ClusterSize * ClusterSize*2, 40);
+	            if (doublingCtr > _doublingThreshhold)
                 {
                     doublingCtr = 0;
 	                Debug.LogWarning("doubling bacteria =)");

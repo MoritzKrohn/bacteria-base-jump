@@ -16,9 +16,12 @@ namespace Assets.Scripts
         private Vector3 _origin;
 
         private float _fallingSpeed = 50f;
+        private GameController gameController;
+        private bool _watching;
 
         void Awake()
         {
+            gameController = FindObjectOfType<GameController>();
             _rigidBody = GetComponent<Rigidbody>();
             _origin = transform.position;
             Time.timeScale = 1.5f;
@@ -40,14 +43,13 @@ namespace Assets.Scripts
             {
                 float step = 4f;
                 transform.position = Vector3.MoveTowards(transform.position, _origin, step);
-                if (transform.position == _origin)
+                if (transform.position == _origin && !_watching)
                 {
                     _returning = false;
                     _falling = true;
                     PlayerModel.SetActive(true);
                     _fallingSpeed = 50;
                 }
-                    
             }
         }
 
@@ -55,20 +57,29 @@ namespace Assets.Scripts
         {
             if (c.transform.tag == "Floor")
             {
-                _falling = false;
+                
+                gameController.BacteriaRetries--; // reduce retries
+                
+                if (gameController.BacteriaRetries <= 0)
+                {
+                    _watching = true;
+                    PlayerModel.GetComponent<MeshRenderer>().enabled = false;
+                }
                 InstantiateBacterium();
                 _returning = true;
+                _falling = false;
+                
                 PlayerModel.SetActive(false);
             }
         }
 
         private void InstantiateBacterium()
         {
-            GameObject bact = Instantiate(BacteriaPrefab, PlayerModel.transform.position, PlayerModel.transform.rotation, GameObject.FindGameObjectWithTag("Bacterias").transform);
+            GameObject bact = Instantiate(BacteriaPrefab, PlayerModel.transform.position,
+                PlayerModel.transform.rotation, GameObject.FindGameObjectWithTag("Bacterias").transform);
             Bacteria component = bact.GetComponent<Bacteria>();
             component.CalculateCluster();
-            Debug.LogWarning("Added to a cluster with "+component.Cluster.Count+" elements.");
+            Debug.LogWarning("Added to a cluster with " + component.Cluster.Count + " elements.");
         }
-
     }
 }
