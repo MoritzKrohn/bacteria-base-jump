@@ -25,7 +25,6 @@ namespace Assets.Scripts
         {
             if (_falling)
             {
-                Debug.LogWarning("updated");
                 var mousePosition = Input.mousePosition;
                 var direction = new Vector3(mousePosition.x - Screen.width / 2, -50, mousePosition.y - Screen.height / 2);
                 direction /= 30;
