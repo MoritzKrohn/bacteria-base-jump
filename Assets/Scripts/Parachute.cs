@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -48,7 +49,7 @@ namespace Assets.Scripts
 
         void OnCollisionEnter(Collision c)
         {
-            Debug.LogWarning("test");
+            //Debug.LogWarning("test");
             if (c.transform.tag == "Floor")
             {
                 _falling = false;
@@ -62,6 +63,9 @@ namespace Assets.Scripts
         private void InstantiateBacterium()
         {
             GameObject bact = Instantiate(BacteriaPrefab, PlayerModel.transform.position, PlayerModel.transform.rotation, GameObject.FindGameObjectWithTag("Bacterias").transform);
+            Bacteria component = bact.GetComponent<Bacteria>();
+            component.CalculateCluster();
+            Debug.LogWarning("Added to a cluster with "+component.Cluster.Count+" elements.");
         }
 
     }
